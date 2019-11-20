@@ -22,6 +22,7 @@ import com.limit.learn.base.BasePresenter;
 import com.limit.learn.loading.ShapeLoadingDialog;
 import com.limit.learn.util.DensityUtil;
 import com.limit.learn.util.VideoTimeUtil;
+import com.limit.learn.video.constant.VideoUrlConstant;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -71,7 +72,7 @@ public class VideoViewActivity extends BaseActivity implements MediaPlayer.OnCom
         videoViewPlayer.setOnErrorListener(this);//播放失败监听
         videoViewPlayer.setOnInfoListener(this);//播放信息监听
         videoViewPlayer.setOnPreparedListener(this);//资源准备完成监听
-        Uri mUri = Uri.parse("http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8");
+        Uri mUri = Uri.parse(VideoUrlConstant.VIDEO_M3U8);
         videoViewPlayer.setVideoURI(mUri);
         videoViewPlayer.start();
         videoViewPlayer.requestFocus();

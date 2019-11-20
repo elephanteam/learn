@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.limit.learn.R;
 import com.limit.learn.base.BaseActivity;
 import com.limit.learn.base.BasePresenter;
+import com.limit.learn.video.constant.VideoUrlConstant;
 
 import java.io.IOException;
 

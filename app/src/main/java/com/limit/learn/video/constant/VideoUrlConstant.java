@@ -1,4 +1,4 @@
-package com.limit.learn.video;
+package com.limit.learn.video.constant;
 
 //视频url常量
 public class VideoUrlConstant {
