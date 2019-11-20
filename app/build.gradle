@@ -1,0 +1,148 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    //这里是读取local.properties文件，提供给下方代码用来提取keystore_storeFile等key的值
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    //Android默认配置
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    //Error: Static interface methods are only supported starting with Android N (--min-api 24)          java 8才支持
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        config {
+            storeFile file(properties.getProperty("keystore_storeFile"))
+            storePassword properties.getProperty("keystore_storePassword")
+            keyAlias properties.getProperty("keystore_keyAlias")
+            keyPassword properties.getProperty("keystore_keyPassword")
+        }
+    }
+
+    defaultConfig {
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode Integer.parseInt(project.VERSION_CODE)
+        versionName project.VERSION_NAME
+        multiDexEnabled = true
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+
+    flavorDimensions "1"
+    productFlavors {
+
+        dev { // 开发环境
+            applicationId "com.elephant.demo.dev"//程序id
+            buildConfigField("boolean", "APP_DEBUG", "true")// 正式环境关闭日志打印  BuildConfig获取
+            buildConfigField("String", "APP_URL", "\"${project.SERVER_URL_DEV}\"")//http请求url
+            buildConfigField("String", "SERVER_VERSION_NAME", "\"${project.SERVER_VERSION_NAME}\"")//服务器版本号
+            versionName project.VERSION_NAME + "_" + project.VERSION_TYPE_EDV//app版本号
+            manifestPlaceholders = [app_name: "@string/app_name_dev",
+                                    app_icon:"@mipmap/ic_launcher" ]
+        }
+
+
+        pro { // 生产环境
+            applicationId "com.elephant.demo"
+            buildConfigField("boolean", "APP_DEBUG", "false")
+            buildConfigField("String", "APP_URL", "\"${project.SERVER_URL_PRO}\"")
+            buildConfigField("String", "SERVER_VERSION_NAME", "\"${project.SERVER_VERSION_NAME}\"")
+            versionName project.VERSION_NAME + "_"  + project.VERSION_TYPE_PRO
+            manifestPlaceholders = [app_name: "@string/app_name_pro",
+                                    app_icon:"@mipmap/ic_launcher" ]
+        }
+
+        // APK 打包名称输出
+        android.applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                outputFileName = "${variant.productFlavors[0].name}_${variant.versionCode}_${variant.versionName}_${buildTime()}.apk"
+            }
+        }
+
+    }
+}
+
+static def buildTime() { // 编译时间
+    return new Date().format("yyyyMMdd_HHmmss", TimeZone.getTimeZone("UTC"))
+}
+
+greendao {
+    schemaVersion 1 //数据库版本号
+    daoPackage 'com.limit.learn.greendao'// 设置DaoMaster、DaoSession、Dao 包名
+    targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用 / 不要用 .
+    generateTests false //设置为true以自动生成单元测试。
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    // Retrofit2
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    // RxJava2
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    // OkHttp3
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    implementation 'com.orhanobut:logger:2.2.0'
+
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    implementation 'org.greenrobot:greendao:3.2.2'
+
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.8'
+
+}

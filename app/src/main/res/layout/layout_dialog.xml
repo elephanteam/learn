@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/aa_dialog_bg"
+    android:paddingLeft="@dimen/dp_72"
+    android:paddingRight="@dimen/dp_72"
+    android:paddingTop="@dimen/dp_36"
+    android:paddingBottom="@dimen/dp_36"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+
+    <com.limit.learn.loading.LoadingView
+        android:id="@+id/loadView"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</FrameLayout>

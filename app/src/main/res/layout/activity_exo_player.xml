@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scrollbars="horizontal"
+        app:show_buffering="when_playing"
+        app:auto_show="true"
+        app:use_controller="true"
+        android:layout_marginBottom="@dimen/dp_10"/>
+    <!--    自定义布局文件    app:controller_layout_id="@layout/custom_controls"-->
+
+    <TextView
+        android:id="@+id/exo_view_play"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:textSize="@dimen/sp_16"
+        android:layout_margin="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:background="@drawable/selector_item_cccccc"
+        android:text="@string/play"/>
+
+    <TextView
+        android:id="@+id/exo_view_pause"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:textSize="@dimen/sp_16"
+        android:layout_margin="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:background="@drawable/selector_item_cccccc"
+        android:text="@string/pause"/>
+
+    <TextView
+        android:id="@+id/video_view_orientation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:textSize="@dimen/sp_16"
+        android:layout_margin="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:background="@drawable/selector_item_cccccc"
+        android:text="@string/orientation"/>
+</LinearLayout>
