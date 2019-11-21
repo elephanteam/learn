@@ -71,7 +71,7 @@ android {
     productFlavors {
 
         dev { // 开发环境
-            applicationId "com.elephant.demo.dev"//程序id
+            applicationId "com.limit.learn.dev"//程序id
             buildConfigField("boolean", "APP_DEBUG", "true")// 正式环境关闭日志打印  BuildConfig获取
             buildConfigField("String", "APP_URL", "\"${project.SERVER_URL_DEV}\"")//http请求url
             buildConfigField("String", "SERVER_VERSION_NAME", "\"${project.SERVER_VERSION_NAME}\"")//服务器版本号
@@ -82,7 +82,7 @@ android {
 
 
         pro { // 生产环境
-            applicationId "com.elephant.demo"
+            applicationId "com.limit.learn"
             buildConfigField("boolean", "APP_DEBUG", "false")
             buildConfigField("String", "APP_URL", "\"${project.SERVER_URL_PRO}\"")
             buildConfigField("String", "SERVER_VERSION_NAME", "\"${project.SERVER_VERSION_NAME}\"")
@@ -144,5 +144,9 @@ dependencies {
     implementation 'com.nineoldandroids:library:2.4.0'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.10.8'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
+
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+    implementation 'com.github.akarnokd:rxjava2-interop:0.12.10'
 
 }
