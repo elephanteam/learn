@@ -326,24 +326,23 @@ public class WifiDirectService extends Service implements ChannelListener, WifiP
         try {
             hasConnected = false;
             if(group==null){//The group does not exist
-                Log.e("***********","onGroupInfoAvailable  group.getNetworkName() = " + group.getNetworkName() + "-----group.getClientList().size() =" + group.getClientList().size());
                 if (meInfo == null) {
                     meInfo = new WifiP2pEntity();
                 }
                 meInfo.setStatus(WifiP2pDevice.AVAILABLE);// Disconnection or connection failure reset connection status
                 if(hasInit){
-                    new Handler().postDelayed(new Runnable(){
-                        public void run() {
-                            //execute the task
-                            if (manager != null && channel != null){
-                                if (serviceInfo != null){
-                                    mPresenter.registerP2pService(manager,channel,serviceInfo);//Disconnect to re-register
-                                }
-                                mPresenter.discoverService(manager,channel);//To search for other equipment services
+                    new Handler().postDelayed(() -> {
+                        //execute the task
+                        if (manager != null && channel != null){
+                            if (serviceInfo != null){
+                                mPresenter.registerP2pService(manager,channel,serviceInfo);//Disconnect to re-register
                             }
+                            mPresenter.discoverService(manager,channel);//To search for other equipment services
                         }
                     }, (long) (Math.random() * 5000)); //Random search time to start, there is a sequence, avoid period began to search at the same time
                 }
+            }else{
+                Log.e("***********","onGroupInfoAvailable  group.getNetworkName() = " + group.getNetworkName() + "-----group.getClientList().size() =" + group.getClientList().size());
             }
         } catch (Exception e) {
             e.printStackTrace();

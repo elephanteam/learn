@@ -45,6 +45,9 @@ public class WifiP2PActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        Intent intent = new Intent(this, WifiDirectService.class);
+        stopService(intent);
+        startService(intent);
         isBound = bindService(new Intent(this, WifiDirectService.class), serviceConn, Activity.BIND_AUTO_CREATE);
         IntentFilter filter = new IntentFilter(WifiConstant.WIFI_DIRECT_OFFLINE_MEMBER_LIST);
         filter = new IntentFilter(WifiConstant.WIFI_DIRECT_OFFLINE_MSG);
@@ -75,13 +78,12 @@ public class WifiP2PActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
+        stopService(new Intent(this, WifiDirectService.class));
     }
 
     @OnClick(R.id.wifi_direct_search)
     public void onClickWifiSearch(){
-        Intent intent = new Intent(this, WifiDirectService.class);
-        stopService(intent);
-        startService(intent);
+
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {

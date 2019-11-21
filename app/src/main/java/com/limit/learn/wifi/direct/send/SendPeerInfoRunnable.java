@@ -1,5 +1,7 @@
 package com.limit.learn.wifi.direct.send;
 
+import android.util.Log;
+
 import com.limit.learn.base.BaseApplication;
 import com.limit.learn.util.ToastUtils;
 import com.limit.learn.wifi.WifiConstant;
@@ -51,6 +53,7 @@ public class SendPeerInfoRunnable implements Runnable {
            stream.write(jsonLength.length());
            stream.write(jsonLength.getBytes());
            stream.write(jsonString.getBytes());
+           Log.e("************","send peers");
        } catch (IOException e) {
            result = false;
        } finally {
