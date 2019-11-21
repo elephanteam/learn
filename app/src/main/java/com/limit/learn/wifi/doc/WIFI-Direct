@@ -1,0 +1,167 @@
+WIFI-Direct 在Android4.0时候引入
+
+优点：范围广，速度快  可以在无网情况下进行大文件传输（测试过一次 大概无遮挡情况下 100米 真实传输速度 3-5M/s）
+
+缺点：耗电量大 连接不稳定
+
+1.创建WifiP2pManager
+WifiP2pManager   manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+
+2.获取通道
+Channel channel = manager.initialize(this, getMainLooper(), this);
+
+3.创建一个Bonjour服务信息对象。用于添加服务
+WifiP2pDnsSdServiceInfo serviceInfo = WifiP2pDnsSdServiceInfo.newInstance("learn", "_learn.ipp._tcp", null);
+
+4.加入本地服务  添加本地服务，发送服务信息，网络渠道和用来表示成功或失败的监听器请求。
+manager.addLocalService(channel, serviceInfo, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("***********","registerP2pService");
+            }
+
+            @Override
+            public void onFailure(int arg0) {
+                Log.e("***********","registerP2pService onFailure" + arg0);
+            }
+        });
+
+5.注册监听服务 可发现其他设备的信息
+WifiP2pManager.DnsSdServiceResponseListener servListener = (instanceName, registrationType, resourceType) -> {
+            if("learn".equals(instanceName)){//连接服务
+                if (resourceType.isGroupOwner()){
+                    mView.connectDevice(resourceType);
+                }else{
+                    mView.discoverPeer();
+                }
+            }
+        };
+manager.setDnsSdResponseListeners(channel, servListener, null);
+
+6.查找服务  必须先进行addServiceRequest才能进行查找服务
+WifiP2pDnsSdServiceRequest serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
+        manager.addServiceRequest(channel, serviceRequest,
+                new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.e("***********","addServiceRequest");
+                        discoverService(manager,channel);
+                    }
+
+                    @Override
+                    public void onFailure(int code) {
+                        Log.e("***********","addServiceRequest onFailure" + code);
+                    }
+                });
+manager.discoverServices(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("***********","discoverService");
+            }
+            @Override
+            public void onFailure(int code) {
+                Log.e("***********","discoverService onFailure" + code);
+            }
+        });
+
+7.连接服务 在注册监听的时候当发现服务可用时会回调onDnsSdServiceAvailable方法中获取到WifiP2pDevice对象
+manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("***********","connect");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                mView.onConnectFailure(reason);
+                Log.e("***********","connect onFailure" + reason);
+            }
+        });
+
+
+/**
+ * 一个应用可以初始化被发现的热点是通过discoverPeers(Wifip2pManager.channel,Wifip2pManager.ActionListener).
+ * 一个已经被初始化的Peer来自从设备开始连接热点后应用在活动期间的请求，会组成一个Peer组或者这里有一个明确的stopPeerDiscovery(Wifip2pManager.channel,Wifip2pManager.ActionListen),
+ * App可以监听wifi_p2p_discovery_changed_Action去知道一个p2p是否在运行或者停止工作，通常地，wifi_p2p_peers_changed_action可以说明peer列表的改变
+ * @param manager             WifiPepManager
+ * @param channel             WifiP2pManager channel
+ * */
+manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
+    @Override
+    public void onSuccess() {
+        Log.e("***********","discoverPeers");
+    }
+
+    @Override
+    public void onFailure(int reasonCode) {
+        Log.e("***********","discoverPeers onFailure" + reasonCode);
+    }
+});
+
+
+可以更改设备名称 方便识别
+Method method;
+try {
+    method = manager.getClass().getMethod("setDeviceName", WifiP2pManager.Channel.class, String.class, WifiP2pManager.ActionListener.class);
+    method.invoke(manager, channel, android.os.Build.BRAND + UUID.randomUUID(),new WifiP2pManager.ActionListener() {
+        public void onSuccess() {
+            Log.e("***********","renameDeviceName");
+        }
+
+        public void onFailure(int reason) {
+            Log.e("***********","renameDeviceName onFailure" + reason);
+        }
+    });
+} catch (Exception | Error e) {
+    e.printStackTrace();
+}
+
+
+重要 监听广播 WiFiDirectBroadcastReceiver
+
+WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION  判断是否支持 wifi点对点传输
+int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+    // 支持则开始搜索
+    netService.setIsWifiP2pEnabled(true);
+    discoverPeer();
+} else {
+    netService.setIsWifiP2pEnabled(false);
+}
+
+WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION  查找到设备列表
+从wifi p2p管理器请求可用的对等体。 这是个异步调用和调用活动通过通知PeerListListener.onPeersAvailable（）上的回调
+if (isWifiP2pAviliable()) {
+    //建议用下方的方法  requestPeers是以前遗留 不知道去除会有什么情况 暂时保留看看效果
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        WifiP2pDeviceList mPeers  = intent.getParcelableExtra(WifiP2pManager.EXTRA_P2P_DEVICE_LIST);
+        if (mPeers != null && mPeers.getDeviceList() != null && mPeers.getDeviceList().size() > 0){
+            netService.onPeersAvailable(mPeers);
+        }else{
+            netService.requestPeers(serviceListener);
+        }
+    }else{
+        //requestPeers方法返回的数据大部分时候是空的 不建议用这个方法
+        netService.requestPeers(serviceListener);
+    }
+}
+
+WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION  获取到连接状态改变的详细信息
+if (!netService.isWifiP2pAviliable()) {
+    return;
+}
+//然后调用requestConnectionInfo获取连接信息
+NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+if (networkInfo.isConnected()) {
+    netService.requestConnectionInfo(serviceListener);
+}else{
+    netService.discoverPeer();
+    netService.onConnectionInfoInvalid();
+}
+
+WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION  自身设备信息改变
+
+
+取消连接需要移除注册的信息
+
+连接成功就可以发送消息了

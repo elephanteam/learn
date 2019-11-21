@@ -10,6 +10,9 @@ import com.limit.learn.MainActivity;
 import com.limit.learn.entity.UserBean;
 import com.limit.learn.greendao.DaoMaster;
 import com.limit.learn.greendao.DaoSession;
+import com.limit.learn.util.SDCardCtrl;
+
+import java.util.UUID;
 
 
 /**
@@ -23,9 +26,12 @@ public class BaseApplication extends MultiDexApplication {
 
     private DaoSession daoSession;
 
+    public static final String wifiUid = UUID.randomUUID().toString();
+
     @Override
     public void onCreate() {
         super.onCreate();
+        SDCardCtrl.initPath(this);
         app = this;
         myInfo = new UserBean();
         // 设置 Debug 模式

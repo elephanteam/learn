@@ -9,6 +9,8 @@
     <string name="pause">暂停</string>
     <string name="orientation">横竖屏切换</string>
 
+    <string name="wifi_direct_search">WIFI直连搜索</string>
+
 
     <string name="loading">加载中...</string>
 </resources>

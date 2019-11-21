@@ -1,6 +1,7 @@
 package com.limit.learn.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -56,4 +57,16 @@ public class Utils {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
+    /**
+     * send broadcast
+     * @ param intent parameters
+     * @ param local is a local broadcast
+     */
+    public static void sendBroadcastReceiver(Context mContext, Intent intent) {
+        if (mContext != null) {
+            mContext.sendBroadcast(intent);
+        }
+    }
+
 }
