@@ -34,4 +34,9 @@ public class VideoActivity extends BaseActivity {
     public void onClickExoPlayer(){
         startActivity(new Intent(this,ExoPlayerActivity.class));
     }
+
+    @OnClick(R.id.video_media_player)
+    public void onClickMediaPlayer(){
+        startActivity(new Intent(this,MediaPlayerActivity.class));
+    }
 }

@@ -4,6 +4,7 @@
     <string name="video">视频</string>
     <string name="video_view_player">ViewView</string>
     <string name="video_exo_player">ExoPlayer</string>
+    <string name="video_media_player">MediaPlayer</string>
     <string name="play">播放</string>
     <string name="pause">暂停</string>
     <string name="orientation">横竖屏切换</string>

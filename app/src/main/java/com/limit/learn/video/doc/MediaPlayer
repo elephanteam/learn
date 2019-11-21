@@ -1,0 +1,13 @@
+ * MediaPlayer 能播放的格式很少
+ *
+ * MediaPlayer使用Surface进行视频的展示。
+ * MediaPlayer只支持mp4、avi、3gp格式的视频，支持格式相对单一。
+ * MediaPlayer可以播放网络视频，支持的网络视频的协议为：Http协议和RTSP协议两种。
+ * 
+ * 在使用start()播放流媒体之前，需要装载流媒体资源。
+ * 这里最好使用prepareAsync()用异步的方式装载流媒体资源。
+ * 因为流媒体资源的装载是会消耗系统资源的，在一些硬件不理想的设备上，如果使用prepare()同步的方式装载资源，可能会造成UI界面的卡顿，这是非常影响用于体验的。
+ * 因为推荐使用异步装载的方式，为了避免还没有装载完成就调用start()而报错的问题，需要绑定MediaPlayer.setOnPreparedListener()事件，它将在异步装载完成之后回调。
+ * 异步装载还有一个好处就是避免装载超时引发ANR（(Application Not Responding）错误。
+ *
+ * 使用完MediaPlayer需要回收资源。MediaPlayer是很消耗系统资源的，所以在使用完MediaPlayer，不要等待系统自动回收，最好是主动回收资源

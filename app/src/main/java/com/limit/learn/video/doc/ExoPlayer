@@ -1,0 +1,64 @@
+https://exoplayer.dev/track-selection.html
+
+ExoPlayer 是google推出的播放器，可以支持视频裁剪，连续播放多个视频，视频和文本混合播放等
+
+ExoPlayer 支持DASH,HLS和普通媒体的播放
+
+
+1.创建播放器
+可以ExoPlayer使用创建实例ExoPlayerFactory。工厂提供了多种用于创建ExoPlayer具有不同自定义级别的实例的方法。
+对于绝大多数用例，ExoPlayerFactory.newSimpleInstance应使用其中一种方法。这些方法return SimpleExoPlayer，扩展ExoPlayer为添加了其他高级播放器功能。
+SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
+
+2.将播放器附加到视图
+ExoPlayer库提供了一个PlayerView，其中封装了 PlayerControlView，a SubtitleView和a Surface渲染视频。一个PlayerView可以包含在应用程序的布局XML。
+playerView.setPlayer(player);
+
+3.准备播放器
+在ExoPlayer中，每种媒体都由表示MediaSource。要播放某种媒体，您必须先创建一个对应的媒体MediaSource，然后将此对象传递给ExoPlayer.prepare。
+ExoPlayer库提供 MediaSourceDASH（DashMediaSource），SmoothStreaming（SsMediaSource），HLS（HlsMediaSource）和常规媒体文件（ProgressiveMediaSource）的实现。
+以下代码显示了如何准备MediaSource适合播放MP4文件的播放器。
+DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,Util.getUserAgent(context, "yourApplicationName"));
+MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mp4VideoUri);
+player.prepare(videoSource);
+
+4.释放资源
+重要的是在不再需要播放器时将其释放，以释放有限的资源（例如视频解码器）供其他应用程序使用。这可以通过调用来完成ExoPlayer.release。
+
+
+监听
+Player.EventListener可以监听多个事件  主要是 onPlayerStateChanged  onPlayerError
+
+
+播放播放列表
+可以将Composite进一步组合MediaSource以用于更多不常见的用例。给定两个视频A和B，以下示例显示了如何 LoopingMediaSource和ConcatenatingMediaSource可以一起使用它们播放序列（A，A，B）。
+MediaSource firstSource = new ProgressiveMediaSource.Factory(...).createMediaSource(firstVideoUri);
+MediaSource secondSource = new ProgressiveMediaSource.Factory(...).createMediaSource(secondVideoUri);
+LoopingMediaSource firstSourceTwice = new LoopingMediaSource(firstSource, 2);
+ConcatenatingMediaSource concatenatedSource = new ConcatenatingMediaSource(firstSourceTwice, secondSource);
+
+侧面加载字幕文件
+给定一个视频文件和一个单独的字幕文件，MergingMediaSource可以将它们合并到一个源中进行播放。
+// Build the video MediaSource.
+MediaSource videoSource = new ProgressiveMediaSource.Factory(...).createMediaSource(videoUri);
+// Build the subtitle MediaSource.
+Format subtitleFormat = Format.createTextSampleFormat(
+    id, // An identifier for the track. May be null.
+    MimeTypes.APPLICATION_SUBRIP, // The mime type. Must be set correctly.
+    selectionFlags, // Selection flags for the track.
+    language); // The subtitle language. May be null.
+MediaSource subtitleSource = new SingleSampleMediaSource.Factory(...).createMediaSource(subtitleUri, subtitleFormat, C.TIME_UNSET);
+MergingMediaSource mergedSource = new MergingMediaSource(videoSource, subtitleSource);
+
+剪辑视频
+ClippingMediaSource可用于剪辑a，MediaSource以便仅播放其中的一部分。以下示例将视频播放剪辑为从​​5秒开始到10秒结束。
+MediaSource videoSource = new ProgressiveMediaSource.Factory(...).createMediaSource(videoUri);
+// Clip to start at 5 seconds and end at 10 seconds.
+ClippingMediaSource clippingSource =
+    new ClippingMediaSource(
+        videoSource,
+        /* startPositionUs= */ 5_000_000,
+        /* endPositionUs= */ 10_000_000);
+要仅剪切源的开始，endPositionUs可以设置为 C.TIME_END_OF_SOURCE。为了只剪辑特定的持续时间，有一个带有durationUs参数的构造函数。
+剪辑视频文件的开始时，如果可能，请尝试将开始位置与关键帧对齐。如果起始位置未与关键帧对齐，则播放器将需要解码并丢弃从前一个关键帧到起始位置的数据，然后才能开始播放。
+这将在播放开始时引入短暂的延迟，包括播放器过渡到播放 ClippingMediaSource列表的一部分或由于循环而播放时。
