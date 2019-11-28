@@ -1,20 +1,14 @@
 package com.limit.learn;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 
 import com.limit.learn.base.BaseActivity;
 import com.limit.learn.base.BasePresenter;
-import com.limit.learn.video.ExoPlayerActivity;
 import com.limit.learn.video.VideoActivity;
-import com.limit.learn.video.VideoViewActivity;
 import com.limit.learn.wifi.direct.WifiP2PActivity;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
 
 public class MainActivity extends BaseActivity {
 
@@ -54,5 +48,6 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.main_wifi)
     public void onClickWifiView(){
         startActivity(new Intent(this, WifiP2PActivity.class));
+
     }
 }
