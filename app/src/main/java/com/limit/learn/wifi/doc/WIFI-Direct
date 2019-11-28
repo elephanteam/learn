@@ -1,3 +1,8 @@
+所需权限
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
 WIFI-Direct 在Android4.0时候引入
 
 优点：范围广，速度快  可以在无网情况下进行大文件传输（测试过一次 大概无遮挡情况下 100米 真实传输速度 3-5M/s）

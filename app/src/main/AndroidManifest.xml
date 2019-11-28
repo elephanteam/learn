@@ -11,6 +11,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <uses-feature android:name="android.hardware.wifi.direct" android:required="true"/>
 
     <application
@@ -38,7 +45,22 @@
 
         <activity android:name=".wifi.direct.WifiP2PActivity" android:screenOrientation="portrait" />
 
+        <activity android:name=".sms.SmsActivity" android:screenOrientation="portrait" />
+
         <service android:name=".wifi.service.WifiDirectService" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.limit.learn.fileProvider"
+            android:exported="false"
+            android:enabled="true"
+            tools:replace="android:authorities"
+            android:grantUriPermissions="true">
+            <meta-data
+                tools:replace="android:resource"
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
     </application>
 
 </manifest>

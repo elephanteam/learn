@@ -1,0 +1,25 @@
+蓝牙所需权限
+<uses-permission android:name = "android.permission.BLUETOOTH"/>
+<!--启用应用启动设备发现或者操作蓝牙设备的超级管理员-->
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+<!-- 6.0以上需要添加 -->
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+判断设备是否支持蓝牙  BluetoothAdapter.isEnabled()
+打开蓝牙 BluetoothAdapter.enable();
+BluetoothAdapter是蓝牙最关键的部分，整个蓝牙系统只有一个蓝牙适配器  可以用来发现 查询 绑定设备
+
+BluetoothDevice.ACTION_FOUND  蓝牙扫描广播
+BluetoothAdapter.ACTION_DISCOVERY_FINISHED  蓝牙扫描结束广播
+
+
+蓝牙分为经典蓝牙和低功耗蓝牙
+
+经典蓝牙
+经典蓝牙通讯通过BlueToothSocket这个类，读写数据跟java中的Socket是一样的。
+BlueToothSocket blueToothSocket = device.createRfcommSocketToServiceRecord(UUID);
+blueToothSocket.connect();
+
+低功耗蓝牙
+低功耗蓝牙通过Device的connectGatt方法进行连接，在BluetoothGattCallback回调中进行控制。
+BluetoothGatt bluetoothGatt = device.connectGatt(this, false,bluetoothGattCallback);
