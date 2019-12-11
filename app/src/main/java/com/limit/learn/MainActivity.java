@@ -7,6 +7,7 @@ import android.os.Build;
 
 import com.limit.learn.base.BaseActivity;
 import com.limit.learn.base.BasePresenter;
+import com.limit.learn.bluetooth.BlueToothActivity;
 import com.limit.learn.sms.SmsActivity;
 import com.limit.learn.video.VideoActivity;
 import com.limit.learn.wifi.direct.WifiP2PActivity;
@@ -56,6 +57,19 @@ public class MainActivity extends BaseActivity {
                     });
         }else{
             startActivity(new Intent(this, SmsActivity.class));
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    @OnClick(R.id.main_bluetooth)
+    public void onClickBluetoothView(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            new RxPermissions(this).request(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    .subscribe(aBoolean -> {
+                        startActivity(new Intent(this, BlueToothActivity.class));
+                    });
+        }else{
+            startActivity(new Intent(this, BlueToothActivity.class));
         }
     }
 }

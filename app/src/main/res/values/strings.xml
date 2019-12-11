@@ -11,6 +11,10 @@
 
     <string name="wifi_direct_search">WIFI直连搜索</string>
 
+    <string name="bluetooth">蓝牙</string>
+    <string name="bluetooth_search">普通蓝牙搜索</string>
+    <string name="bluetooth_ble_search">低功耗蓝牙搜索</string>
+
 
     <string name="sms">短信</string>
 

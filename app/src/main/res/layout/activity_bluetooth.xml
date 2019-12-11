@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/main_video"
+        android:id="@+id/bluetooth_search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         android:textSize="@dimen/sp_16"
@@ -14,40 +13,27 @@
         android:paddingLeft="@dimen/dp_10"
         android:gravity="center"
         android:background="@drawable/selector_item_cccccc"
-        android:text="@string/video"/>
+        android:text="@string/bluetooth_search"/>
+
+    <TextView
+        android:id="@+id/bluetooth_ble_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:textSize="@dimen/sp_16"
+        android:layout_margin="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:background="@drawable/selector_item_cccccc"
+        android:text="@string/bluetooth_ble_search"/>
 
 
     <TextView
-        android:id="@+id/main_wifi"
+        android:id="@+id/bluetooth_search_content"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/sp_16"
         android:layout_margin="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_10"
-        android:gravity="center"
-        android:background="@drawable/selector_item_cccccc"
-        android:text="@string/wifi_direct_search"/>
-
-    <TextView
-        android:id="@+id/main_bluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:textSize="@dimen/sp_16"
-        android:layout_margin="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_10"
-        android:gravity="center"
-        android:background="@drawable/selector_item_cccccc"
-        android:text="@string/bluetooth"/>
-
-    <TextView
-        android:id="@+id/main_sms"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:textSize="@dimen/sp_16"
-        android:layout_margin="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_10"
-        android:gravity="center"
-        android:background="@drawable/selector_item_cccccc"
-        android:text="@string/sms"/>
+        android:gravity="center"/>
 
 </LinearLayout>

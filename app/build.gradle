@@ -55,9 +55,9 @@ android {
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
         multiDexEnabled = true
-        ndk {
-            abiFilters 'armeabi-v7a'
-        }
+//        ndk {
+//            abiFilters 'armeabi-v7a'
+//        }
     }
 
     buildTypes {
@@ -156,6 +156,9 @@ dependencies {
 
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
     implementation 'com.github.akarnokd:rxjava2-interop:0.12.10'
+
+    implementation 'org.slf4j:slf4j-api:1.7.12'
+    testImplementation 'org.slf4j:slf4j-jdk14:1.7.12'
 
 
 }
